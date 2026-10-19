@@ -1,0 +1,25 @@
+# --- Build output (Maven) ---
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# --- IDE / editor ---
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.classpath
+.project
+.settings/
+.factorypath
+bin/
+
+# --- Secrets: never commit ---
+.env
+.env.*
+!.env.example
+
+# --- OS / logs ---
+.DS_Store
+Thumbs.db
+*.log
