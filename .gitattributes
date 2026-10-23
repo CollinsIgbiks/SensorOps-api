@@ -12,3 +12,5 @@
 *.jpg binary
 *.gif binary
 *.jar binary
+
+/mvnw text eol=lf
