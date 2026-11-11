@@ -1,5 +1,4 @@
-package io.github.collinsigbiks.sensorops_api;
-
+package io.github.collinsigbiks.sensorops;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
