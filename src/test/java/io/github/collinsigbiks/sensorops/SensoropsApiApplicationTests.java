@@ -1,4 +1,4 @@
-package io.github.collinsigbiks.sensorops_api;
+package io.github.collinsigbiks.sensorops;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
