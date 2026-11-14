@@ -26,6 +26,10 @@ public class Reading {
     @JoinColumn(name = "device_id", nullable = false)
     private Device device;
 
+    // Same column as the association above, read-only: gives the id without loading the Device
+    @Column(name = "device_id", insertable = false, updatable = false)
+    private Long deviceId;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Metric metric;
@@ -42,6 +46,7 @@ public class Reading {
 
     public Reading(Device device, Metric metric, double value, Instant recordedAt) {
         this.device = Objects.requireNonNull(device, "device");
+        this.deviceId = device.getId();
         this.metric = Objects.requireNonNull(metric, "metric");
         this.value = value;
         this.recordedAt = Objects.requireNonNull(recordedAt, "recordedAt");
@@ -49,6 +54,7 @@ public class Reading {
 
     public Long getId() { return id; }
     public Device getDevice() { return device; }
+    public Long getDeviceId() { return deviceId; }
     public Metric getMetric() { return metric; }
     public double getValue() { return value; }
     public Instant getRecordedAt() { return recordedAt; }

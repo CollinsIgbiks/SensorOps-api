@@ -1,10 +1,13 @@
 package io.github.collinsigbiks.sensorops.controller;
 
 import io.github.collinsigbiks.sensorops.dto.CreateReadingRequest;
+import io.github.collinsigbiks.sensorops.dto.PageResponse;
+import io.github.collinsigbiks.sensorops.dto.ReadingQuery;
 import io.github.collinsigbiks.sensorops.dto.ReadingResponse;
 import io.github.collinsigbiks.sensorops.service.ReadingService;
 import jakarta.validation.Valid;
 import java.net.URI;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,5 +40,10 @@ public class ReadingController {
     @GetMapping("/{id}")
     public ReadingResponse get(@PathVariable long id) {
         return readingService.get(id);
+    }
+
+    @GetMapping
+    public PageResponse<ReadingResponse> search(@Valid @ParameterObject ReadingQuery query) {
+        return readingService.search(query);
     }
 }
