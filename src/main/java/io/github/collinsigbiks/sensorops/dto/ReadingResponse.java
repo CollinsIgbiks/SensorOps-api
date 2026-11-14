@@ -8,7 +8,7 @@ public record ReadingResponse(Long id, Long deviceId, Metric metric, double valu
 
     public static ReadingResponse from(Reading reading) {
         return new ReadingResponse(
-                reading.getId(), reading.getDevice().getId(), reading.getMetric(),
+                reading.getId(), reading.getDeviceId(), reading.getMetric(),
                 reading.getValue(), reading.getRecordedAt());
     }
 }

@@ -28,7 +28,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             MethodArgumentNotValidException ex, HttpHeaders headers,
             HttpStatusCode status, WebRequest request) {
         Stream<ValidationError> fieldErrors = ex.getBindingResult().getFieldErrors().stream()
-                .map(error -> new ValidationError(error.getField(), error.getDefaultMessage()));
+                .map(error -> new ValidationError(error.getField(),
+                        error.isBindingFailure() ? "has an invalid format" : error.getDefaultMessage()));
         Stream<ValidationError> objectErrors = ex.getBindingResult().getGlobalErrors().stream()
                 .map(error -> new ValidationError(error.getObjectName(), error.getDefaultMessage()));
         return validationProblem(Stream.concat(fieldErrors, objectErrors));
