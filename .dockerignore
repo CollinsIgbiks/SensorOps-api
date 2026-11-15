@@ -1,0 +1,9 @@
+.git
+.gitignore
+.gitattributes
+.env
+target/
+.idea/
+.vscode/
+docs/
+*.md
