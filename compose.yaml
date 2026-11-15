@@ -16,5 +16,21 @@ services:
       timeout: 3s
       retries: 10
 
+  api:
+    build: .
+    image: sensorops-api:local
+    container_name: sensorops-api
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
 volumes:
   pgdata:
