@@ -69,12 +69,12 @@ The loop closes because n8n writes the AI verdict back to the API, so the API ho
 - PostgreSQL, with **Flyway** for database migrations
 - springdoc-openapi for **Swagger UI** at `/swagger-ui.html`
 - JUnit 5 + Mockito for unit tests, **Testcontainers** (real PostgreSQL in Docker) for integration tests, JaCoCo for coverage
-- Dockerfile + `docker-compose.yml` (API + Postgres)
+- Dockerfile (multi-stage build, non-root user) + `compose.yaml` (API + PostgreSQL 18)
 - GitHub Actions: build and test on every push and PR, then publish the Docker image to **GitHub Container Registry (GHCR)** on `main`
 
 ### 3.2 Layered design (object-oriented design evidence)
 `controller` → `service` (business logic, behind interfaces) → `repository` (JPA) → `domain` (entities).
-Use DTOs for requests and responses (never expose entities directly), plus one global exception handler that returns consistent error JSON.
+Use DTOs for requests and responses (never expose entities directly), plus one global exception handler that returns consistent error JSON in the RFC 9457 Problem Details format.
 
 ### 3.3 Data model
 - **Device**: `id`, `name`, `location`, `createdAt`
@@ -89,7 +89,8 @@ Use DTOs for requests and responses (never expose entities directly), plus one g
 | GET | `/api/devices`, `/api/devices/{id}` | List or get devices |
 | PUT | `/api/devices/{id}/thresholds` | Set min/max limits per metric |
 | POST | `/api/readings` | Ingest a reading. If it's outside its threshold, create an Alert and notify n8n |
-| GET | `/api/readings?deviceId=&metric=&from=&to=` | Query readings, paginated |
+| GET    | `/api/readings/{id}`                        | Get one reading (the target of the `Location` header)                           |
+| GET | `/api/readings?deviceId=&metric=&from=&to=` | Query readings, paginated, newest first |
 | GET | `/api/alerts?status=` | List alerts |
 | PATCH | `/api/alerts/{id}` | Update status and AI verdict (used by n8n) |
 | GET | `/actuator/health` | Health check (used by CI and Docker) |
@@ -182,8 +183,8 @@ White-box (unit tests in Part 1) · black-box (API and UI here) · integration a
 | # | Milestone | Done when | Status |
 |---|---|---|---|
 | 1 | Setup: repositories, project board, design document | Repos public with a first commit | ✅ Done |
-| 2 | API core: devices, thresholds, readings, PostgreSQL + Flyway, Docker Compose | `docker compose up` works and endpoints work in Swagger | ⏳ Next |
-| 3 | API alerts and tests: alert logic, webhook call, unit and Testcontainers tests, CI, GHCR image | CI green, service coverage ≥ 80% | |
+| 2 | API core: devices, thresholds, readings, PostgreSQL + Flyway, Docker Compose | `docker compose up` works and endpoints work in Swagger | ✅ Done |
+| 3 | API alerts and tests: alert logic, webhook call, unit and Testcontainers tests, CI, GHCR image | CI green, service coverage ≥ 80% |⏳ Next |
 | 4 | Sensor simulator with a labelled fault CSV | Readings stream into the API and alerts appear | |
 | 5 | n8n triage: full workflow, write-back, Sheets log and alerts | A critical fault reaches a phone with an AI explanation | |
 | 6 | Pilot evaluation: 500+ readings, accuracy measured | `PILOT_RESULTS.md` published | |
