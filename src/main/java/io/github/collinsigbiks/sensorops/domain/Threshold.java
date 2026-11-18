@@ -52,6 +52,14 @@ public class Threshold {
         this.maxValue = maxValue;
     }
 
+    /**
+     * True if the value is outside the limits. The limits are inclusive:
+     * a value exactly at minValue or maxValue is still in range.
+     */
+    public boolean isBreachedBy(double value) {
+        return value < minValue || value > maxValue;
+    }
+
     private static void requireValidRange(double minValue, double maxValue) {
         if (minValue > maxValue) {
             throw new IllegalArgumentException("minValue must not exceed maxValue");
