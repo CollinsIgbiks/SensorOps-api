@@ -24,13 +24,16 @@ public class ReadingServiceImpl implements ReadingService {
 
     private final DeviceRepository deviceRepository;
     private final ReadingRepository readingRepository;
+    private final AlertService alertService;
     private final Clock clock;
 
     public ReadingServiceImpl(DeviceRepository deviceRepository,
                               ReadingRepository readingRepository,
+                              AlertService alertService,
                               Clock clock) {
         this.deviceRepository = deviceRepository;
         this.readingRepository = readingRepository;
+        this.alertService = alertService;
         this.clock = clock;
     }
 
@@ -43,7 +46,8 @@ public class ReadingServiceImpl implements ReadingService {
         Reading reading = readingRepository.save(
                 new Reading(device, request.metric(), request.value(), recordedAt));
 
-        // Milestone 3: check the reading against its threshold and raise an alert here.
+        // Same transaction: the reading and its alert are saved together or not at all
+        alertService.raiseIfOutOfRange(reading);
         return ReadingResponse.from(reading);
     }
 
